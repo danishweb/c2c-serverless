@@ -19,6 +19,7 @@
   },
   "dependencies": {
     "aws-lambda": "^1.0.7",
+    "pg": "^8.11.3",
     "reflect-metadata": "^0.2.1",
     "tsyringe": "^4.8.0"
   }
