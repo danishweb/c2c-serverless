@@ -1,4 +1,5 @@
-import { UserRepository } from "app/repository/user.repository";
+import { UserRepository } from "../repository/user.repository";
+import { SucessResponse } from "../utility/response-handler";
 import { APIGatewayProxyEventV2 } from "aws-lambda";
 
 export class UserService {
@@ -8,15 +9,8 @@ export class UserService {
   }
 
   async CreateUser(event: APIGatewayProxyEventV2) {
-    return {
-      statusCode: 200,
-      headers: {
-        "Access-Control-Allow-Origin": "*",
-      },
-      body: JSON.stringify({
-        message: `Hello World`,
-        data: {},
-      }),
-    };
+    return SucessResponse({
+      hello: "world",
+    });
   }
 }
