@@ -1,7 +1,8 @@
-import { UserRepository } from "../repository/user.repository";
-import { SucessResponse } from "../utility/response-handler";
 import { APIGatewayProxyEventV2 } from "aws-lambda";
+import { autoInjectable } from "tsyringe";
+import { UserRepository } from "../repository/user.repository";
 
+@autoInjectable()
 export class UserService {
   repository: UserRepository;
   constructor(repository: UserRepository) {
@@ -9,8 +10,6 @@ export class UserService {
   }
 
   async CreateUser(event: APIGatewayProxyEventV2) {
-    return SucessResponse({
-      hello: "world",
-    });
+    return this.repository.createAccount();
   }
 }

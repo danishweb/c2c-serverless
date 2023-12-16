@@ -1,8 +1,8 @@
 import { APIGatewayProxyEventV2 } from "aws-lambda";
-import { UserRepository } from "../repository/user.repository";
+import { container } from "tsyringe";
 import { UserService } from "../service/user.service";
 
-const service = new UserService(new UserRepository());
+const service = container.resolve(UserService);
 
 export const Signup = async (event: APIGatewayProxyEventV2) => {
   return service.CreateUser(event);
