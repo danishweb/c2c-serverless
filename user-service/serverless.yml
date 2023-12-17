@@ -11,7 +11,7 @@ functions:
     events:
       - httpApi:
           path: /signup
-          method: get
+          method: POST
 
 plugins:
   - serverless-offline
