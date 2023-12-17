@@ -1,10 +1,11 @@
-import { IsEmail, Length } from "class-validator";
+import { IsEmail, IsString, Length } from "class-validator";
 
 export class SignupInput {
   @IsEmail()
   email: string;
 
   @Length(6, 32)
+  @IsString()
   password: string;
 
   @Length(10, 13)

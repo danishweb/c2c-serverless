@@ -37,3 +37,7 @@ export const ErrorResponse = (code = 1000, error: unknown) => {
 
   return formatResponse(code, `${error}`, error);
 };
+
+export const DuplicateRecordErrorResponse = (message: string) => {
+  return formatResponse(409, message, {});
+};
