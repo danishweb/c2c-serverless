@@ -5,12 +5,18 @@ import { SignupInput } from "../models/dto/signupInput";
 import { UserRepository } from "../repository/user.repository";
 import { AppValidationError } from "../utility/dto-errors";
 import { PostgresErrorCodes } from "../utility/errorcodes";
-import { GetHashedPassword, GetSalt } from "../utility/password";
+import {
+  GetHashedPassword,
+  GetSalt,
+  GetToken,
+  ValidatePassword,
+} from "../utility/password";
 import {
   DuplicateRecordErrorResponse,
   ErrorResponse,
   SucessResponse,
 } from "../utility/response-handler";
+import { LoginInput } from "../models/dto/loginInput";
 
 @autoInjectable()
 export class UserService {
@@ -38,6 +44,38 @@ export class UserService {
       });
 
       return SucessResponse(data);
+    } catch (error) {
+      if (error.code === PostgresErrorCodes.DuplicateRecord)
+        return DuplicateRecordErrorResponse("User already exists!");
+      return ErrorResponse(500, error);
+    }
+  }
+
+  async UserLogin(event: APIGatewayProxyEventV2) {
+    try {
+      const input = plainToClass(LoginInput, event.body);
+      const error = await AppValidationError(input);
+      if (error) return ErrorResponse(400, error);
+
+      const data = await this.repository.findAccount(input.email);
+
+      const verified = await ValidatePassword(
+        input.password,
+        data.password,
+        data.salt
+      );
+
+      if (!verified) throw new Error("Invalid Credentials!");
+
+      const authToken = GetToken(data, "authorization");
+      const refreshToken = GetToken(data, "refresh");
+
+      let expiryDate = new Date();
+      expiryDate.setDate(expiryDate.getDate() + 5);
+
+      return SucessResponse({ authToken }, [
+        `token=${refreshToken};Expires=${expiryDate.toUTCString()};Secure;`,
+      ]);
     } catch (error) {
       if (error.code === PostgresErrorCodes.DuplicateRecord)
         return DuplicateRecordErrorResponse("User already exists!");

@@ -12,3 +12,9 @@ export const Signup = middy((event: APIGatewayProxyEventV2) => {
 })
   .use(bodyParser())
   .use(httpErrorHandler());
+
+export const Login = middy((event: APIGatewayProxyEventV2) => {
+  return service.UserLogin(event);
+})
+  .use(bodyParser())
+  .use(httpErrorHandler());

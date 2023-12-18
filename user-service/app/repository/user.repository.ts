@@ -23,4 +23,16 @@ export class UserRepository extends DBOperation {
       return result.rows[0] as UserModel;
     }
   }
+
+  async findAccount(email: string) {
+    const queryString =
+      "SELECT user_id, email, password, phone, country_code, salt, verification_code, expiry FROM users WHERE email = $1";
+    const values = [email];
+    const result = await this.executeQuery(queryString, values);
+
+    if (result.rowCount < 1) {
+      throw Error("user does not exists with provided email id!");
+    }
+    return result.rows[0] as UserModel;
+  }
 }

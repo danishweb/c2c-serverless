@@ -3,14 +3,29 @@ frameworkVersion: "3"
 
 provider:
   name: aws
-  runtime: nodejs18.x
+  runtime: nodejs20.x
+  versionFunctions: false
+  stage: "dev"
+  region: "ap-south-1"
+  httpApi:
+    cors: true
+
+  environment:
+    # ...
 
 functions:
-  api:
+  signup:
     handler: app/handler.Signup
     events:
       - httpApi:
           path: /signup
+          method: POST
+
+  login:
+    handler: app/handler.Login
+    events:
+      - httpApi:
+          path: /login
           method: POST
 
 plugins:
